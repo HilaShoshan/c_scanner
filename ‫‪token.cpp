@@ -14,7 +14,7 @@ void Token::printToken() {
         cout << (char)type << " " << this->text << endl; 
     }
     else {
-        cout << tokenStrings[type-258] << " " << this->text << endl; 
+        cout << tokenStrings[type-258] << " " << this->text << endl;  // print the enam-name of the value
     }   
 }
  

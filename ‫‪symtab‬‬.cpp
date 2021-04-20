@@ -1,15 +1,14 @@
 #include "symtab.h" 
-#include <fstream>
 
 void SymbolTable::initReserved() { 
     string txt, token_num; 
-    ifstream file ("reserved.txt");
+    ifstream file ("reserved.txt");  // open the file
     if (file.is_open()) {
         while (file >> txt) {
             file >> token_num; 
-            Token t((tokenType)stoi(token_num), txt); 
-            shared_ptr<Token> token = make_shared<Token>(t); 
-            this->symMap.insert({txt, token});
+            Token t((tokenType)stoi(token_num), txt);  // construct a Token
+            shared_ptr<Token> token = make_shared<Token>(t);  // construct a shared_ptr to the Token
+            this->symMap.insert({txt, token});  // add to the map 
         }  
         file.close();
     }
@@ -36,11 +35,15 @@ void SymbolTable::xref() {
     map<string, shared_ptr<Token>>::iterator it = this->symMap.begin();
     while (it != symMap.end()) {
         string txt = it->first;  // get the key 
-        shared_ptr<Token> token = it->second;  // get the value 
-        shared_ptr<set<int>> lines = token.get()->getLines(); 
+        if (it->second.get()->getType() != 258) { // not a variable -- don't print it
+            it++; 
+            continue; 
+        }
+        cout << "text: " << txt << endl; 
+        shared_ptr<set<int>> lines = it->second.get()->getLines(); 
         cout << txt << "    "; 
-        for (auto it = lines.get()->begin(); it != lines.get()->end(); ++it)
-            cout << *it << ' ';
+        for (auto it2 = lines.get()->begin(); it2 != lines.get()->end(); ++it2)
+            cout << *it2 << ' ';  // print the line and than a " "
         cout << endl; 
         it++;
     }

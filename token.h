@@ -13,15 +13,15 @@ public:
     Token(tokenType tt, string t) : type(tt), text(t) {}
     tokenType getType();
     string getText();
-    void printToken();
+    void printToken();  // print the token in the form of "type text"
     virtual void add_line(int l) {}
     virtual shared_ptr<set<int>> getLines() {return nullptr;}
 };
 
-class varToken: public Token {
-    shared_ptr<set<int>> lines = make_shared<set<int>>();
+class varToken: public Token {  // token that is a variable - inheritance class of Token 
+    shared_ptr<set<int>> lines = make_shared<set<int>>();  // the lines numbers in which the varToken appeared
 public:
     varToken(string t) : Token(IDENTIFIER, t) {}
-    void add_line(int l);
+    void add_line(int l);  // add new line number to the set 
     shared_ptr<set<int>> getLines();
 };
