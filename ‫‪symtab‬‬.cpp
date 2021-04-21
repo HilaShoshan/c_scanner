@@ -19,7 +19,6 @@ shared_ptr<Token> SymbolTable::lookupToken(string text) {
     auto it = this->symMap.find(text); 
     // it->second.get()->add_line(line_num);
     if (it == symMap.end()) {  // not found
-        // insertToken(text, ); ??
         return nullptr; 
     }   
     else {  
