@@ -70,12 +70,10 @@ string readNumber(Scanner &s, char* c) {
 }
 
 bool isValidNum(string num_str) {
-    regex D("[0-9]");
-    regex E("[Ee][+-]?{D}+"); 
-    regex num1("[1-9]{D}*");
-    regex num2("{D}+{E}");
-    regex num3("{D}*'.'{D}+{E}?");
-    regex num4("{D}+'.'{D}*{E}?"); 
+    regex num1("[1-9][0-9]*");
+    regex num2("[0-9]+[Ee][+-]?{[0-9]+}");
+    regex num3("[0-9]*'.'[0-9]+[Ee][+-]?[0-9]+?");
+    regex num4("[0-9]+'.'[0-9]*[Ee][+-]?[0-9]+?"); 
     if (regex_match(num_str, num1) || regex_match(num_str, num2) || regex_match(num_str, num3) || regex_match(num_str, num4)) {
         return true; 
     }
@@ -107,6 +105,7 @@ string readString(Scanner &s, char* c) {
     s.nextChar(); 
     while (*c != '"') {
         str = str+(*c); 
+        s.nextChar(); 
     }
     return str; 
 }
@@ -157,7 +156,7 @@ shared_ptr<Token> Scanner::nextToken() {
         }
         else {
             inputFile.unget(); 
-            return shared_ptr<Token>(new Token(static_cast<tokenType>(ch),string(1,ch)));
+            return shared_ptr<Token>(new Token(static_cast<tokenType>(curr),string(1,curr)));
         }
         break; 
     // characters that can appear on their own or with a '=' after 
@@ -191,16 +190,16 @@ shared_ptr<Token> Scanner::nextToken() {
         if (token_ptr != nullptr) {
             tokenType tt = token_ptr.get()->getType(); 
             if (tt == IDENTIFIER) {
+                // cout << "lineo " << token_ptr.get()->getText() << " " << lineno << endl;
                 token_ptr.get()->add_line(lineno);
             }
-            else {
-                return token_ptr; 
-            }
+            return token_ptr; 
         }
-        else {  // the token not in the symbol table
+        else {  // the token is not in the symbol table
             varToken var(var_str); 
             shared_ptr<varToken> var_ptr = make_shared<varToken>(var);
             symTab.insertToken(var_str, var_ptr);
+            // cout << "lineo " << var_ptr.get()->getText() << " " << lineno << endl;
             var.add_line(lineno);
             return var_ptr; 
         }

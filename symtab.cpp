@@ -38,7 +38,6 @@ void SymbolTable::xref() {
             it++; 
             continue; 
         }
-        cout << "text: " << txt << endl; 
         shared_ptr<set<int>> lines = it->second.get()->getLines(); 
         cout << txt << "    "; 
         for (auto it2 = lines.get()->begin(); it2 != lines.get()->end(); ++it2)
