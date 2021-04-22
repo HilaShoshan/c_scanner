@@ -17,9 +17,7 @@ int main(int argc, char* argv[]) {
 	shared_ptr<Token> tokenp;		// pointer to token object
 	if (argv[1] == string("-t") || argv[1] == string("--tokens")) { // output tokens
 		cout << "Type\tText\n\n";
-		// cout << scanner.nextToken().get() << endl;
 		while(tokenp = scanner.nextToken()) {
-			// cout << "tokenp: " << tokenp << endl; 
 			tokenp->printToken();
 		}
 	}
