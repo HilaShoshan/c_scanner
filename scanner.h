@@ -1,6 +1,9 @@
+#pragma once
+
 #include <algorithm>
 #include <regex>
 #include "symtab.h"
+
 
 class Scanner {
 	ifstream& inputFile;

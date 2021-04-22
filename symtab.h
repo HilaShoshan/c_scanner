@@ -1,5 +1,8 @@
+#pragma once
+
 #include <map>
 #include "token.h"
+
 
 class SymbolTable {
 	map<string, shared_ptr<Token>> symMap;  // map of variables and reserved words only

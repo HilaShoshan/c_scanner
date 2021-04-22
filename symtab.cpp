@@ -1,5 +1,6 @@
 #include "symtab.h" 
 
+
 void SymbolTable::initReserved() { 
     string txt, token_num; 
     ifstream file ("reserved.txt");  // open the file
@@ -17,7 +18,6 @@ void SymbolTable::initReserved() {
 
 shared_ptr<Token> SymbolTable::lookupToken(string text) {
     auto it = this->symMap.find(text); 
-    // it->second.get()->add_line(line_num);
     if (it == symMap.end()) {  // not found
         return nullptr; 
     }   

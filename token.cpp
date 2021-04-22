@@ -1,6 +1,7 @@
 #include "token.h"
 #include "tokenstrings.h"
 
+
 tokenType Token::getType() {
     return this->type; 
 }
@@ -11,9 +12,11 @@ string Token::getText() {
 
 void Token::printToken() {
     if (this->type < 258) {
+        cout << "less than 258" << endl; 
         cout << (char)type << " " << this->text << endl; 
     }
     else {
+        cout << "258 or more" << endl;
         cout << tokenStrings[type-258] << " " << this->text << endl;  // print the enam-name of the value
     }   
 }

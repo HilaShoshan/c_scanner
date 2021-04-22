@@ -1,9 +1,13 @@
+#pragma once
+
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <set>
+#include <set>   
 #include <memory>
 #include "tokentype.h"
+
+
 using namespace std;
 
 class Token {

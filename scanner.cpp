@@ -113,6 +113,7 @@ string readString(Scanner &s, char* c) {
 /* this method implements the scanner */
 shared_ptr<Token> Scanner::nextToken() { 
     nextChar();  
+    // cout << "my char: " << ch << endl; 
     while (ch == ' ' || ch == '\n' || ch == '\t' || ch == '\r' || ch == '/') {
         if (ch == ' ' || ch == '\n' || ch == '\t' || ch == '\r') {  
             skip_spaces(*this, &ch); 
@@ -182,10 +183,13 @@ shared_ptr<Token> Scanner::nextToken() {
         }
     }
     if (isLetter(ch)) {
+        cout << "im a letter bitch" << endl; 
         string var_str = readVariable(*this, &ch); 
+        cout << "var_str: " << var_str << endl; 
         inputFile.unget();
         shared_ptr<Token> token_ptr = symTab.lookupToken(var_str); 
         if (token_ptr != nullptr) {
+            cout << "token found" << endl; 
             tokenType tt = token_ptr.get()->getType(); 
             if (tt == IDENTIFIER) {
                 token_ptr.get()->add_line(lineno);
@@ -195,9 +199,12 @@ shared_ptr<Token> Scanner::nextToken() {
             }
         }
         else {  // the token not in the symbol table
+            cout << "token not found" << endl; 
             varToken var(var_str); 
-            symTab.insertToken(var_str, make_shared<varToken>(var));
+            shared_ptr<varToken> var_ptr = make_shared<varToken>(var);
+            symTab.insertToken(var_str, var_ptr);
             var.add_line(lineno);
+            return var_ptr; 
         }
     }
     if (ch == '\'') {
