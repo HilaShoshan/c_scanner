@@ -7,7 +7,6 @@
 #include <memory>
 #include "tokentype.h"
 
-
 using namespace std;
 
 class Token {

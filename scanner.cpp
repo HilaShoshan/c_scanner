@@ -70,14 +70,20 @@ string readNumber(Scanner &s, char* c) {
 }
 
 bool isValidNum(string num_str) {
-    regex num1("[1-9][0-9]*");
-    regex num2("[0-9]+[Ee][+-]?{[0-9]+}");
-    regex num3("[0-9]*'.'[0-9]+[Ee][+-]?[0-9]+?");
-    regex num4("[0-9]+'.'[0-9]*[Ee][+-]?[0-9]+?"); 
-    if (regex_match(num_str, num1) || regex_match(num_str, num2) || regex_match(num_str, num3) || regex_match(num_str, num4)) {
+    regex num("\\d+[eE]\\d+|\\d+\\.?\\d*[eE]?\\d*|\\.\\d+");
+    if (regex_match(num_str, num)) {
         return true; 
     }
     return false; 
+}
+
+shared_ptr<Token> digitCase(string num_str) {
+    if (isValidNum(num_str)) {
+        return shared_ptr<Token>(new Token(CONSTANT,num_str));
+    }
+    else {
+        return shared_ptr<Token>(new Token(ERROR,num_str));
+    }
 }
 
 bool isLetter(char c) {
@@ -112,7 +118,6 @@ string readString(Scanner &s, char* c) {
 
 /* this method implements the scanner */
 shared_ptr<Token> Scanner::nextToken() { 
-    // this->ch = '\0'; 
     nextChar();  
     while (ch == ' ' || ch == '\n' || ch == '\t' || ch == '\r' || ch == '/') {
         if (ch == ' ' || ch == '\n' || ch == '\t' || ch == '\r') {  
@@ -136,6 +141,7 @@ shared_ptr<Token> Scanner::nextToken() {
         }
     }
     char curr; 
+    string num_str; 
     switch (ch) {
     // each character represents itself (not a start of another token)
     case ';' : case '{' : case '}' : case ',' : case ':' : \
@@ -173,15 +179,22 @@ shared_ptr<Token> Scanner::nextToken() {
         }
         break;
     }
-    if (isdigit(ch)) {
-        string num_str = readNumber(*this, &ch);
-        inputFile.unget();
-        if (isValidNum(num_str)) {
-            return shared_ptr<Token>(new Token(CONSTANT,num_str));
+    if (ch == '.') {
+        nextChar(); 
+        if (isdigit(ch)) {
+            num_str = readNumber(*this, &ch);
+            inputFile.unget(); 
+            return digitCase('.'+num_str); 
         }
         else {
-            return shared_ptr<Token>(new Token(ERROR,num_str));
+            inputFile.unget();
+            return shared_ptr<Token>(new Token(static_cast<tokenType>('.'),string(1,'.')));
         }
+    }
+    if (isdigit(ch)) {
+        num_str = readNumber(*this, &ch);
+        inputFile.unget(); 
+        return digitCase(num_str); 
     }
     if (isLetter(ch)) {
         string var_str = readVariable(*this, &ch); 
